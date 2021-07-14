@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cognixia.jump.exception.ResourceNotFoundException;
 import com.cognixia.jump.model.User;
 import com.cognixia.jump.repository.UserRepository;
 
@@ -69,13 +70,15 @@ public class UserController {
 		}
 	}
 	
-	@GetMapping("/user/{id}/todo/")
-	public ResponseEntity<?> getUser(@PathVariable Long id) {
-	    
+	@GetMapping("/user/{id}")
+	public ResponseEntity<?> getUserById(@PathVariable Long id) throws ResourceNotFoundException {
+		if(!repo.existsById(id)) {
+			throw new ResourceNotFoundException("User with id " +id + " not found");
+		}
 	    User user = repo.findById(id).get();
 	    
 	    return ResponseEntity.status(200)
-	                        .body(user.getTodos());
+	                        .body(user);
 
 	}
 
