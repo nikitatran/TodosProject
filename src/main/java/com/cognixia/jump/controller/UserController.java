@@ -30,7 +30,6 @@ public class UserController {
 	UserRepository repo;
 	@GetMapping("/user")
 	public ResponseEntity<?> getAllUsers() {
-		
 		List<User> list = repo.findAll();
 		
 		return ResponseEntity.status(200)
