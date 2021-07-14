@@ -1,7 +1,10 @@
 package com.cognixia.jump.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,6 +12,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class User implements Serializable {
@@ -16,7 +22,7 @@ public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public enum Role {
-		ROLE_USER/*, ROLE_ADMIN*/
+		ROLE_USER
 	}
 
 	@Id
@@ -36,18 +42,22 @@ public class User implements Serializable {
 	@Column(nullable = false)
 	private Role role;
 	
+	@OneToMany( mappedBy = "user", cascade = CascadeType.ALL )
+	@JsonManagedReference
+	private List<Todo> todos;
 	
 	public User() {
-		this(-1L, "N/A", "N/A", false, Role.ROLE_USER);
+		this(-1L, "N/A", "N/A", false, Role.ROLE_USER, new ArrayList<Todo>());
 	}
 
-	public User(Long id, String username, String password, boolean enabled, Role role) {
+	public User(Long id, String username, String password, boolean enabled, Role role, List<Todo> todos) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.enabled = enabled;
 		this.role = role;
+		this.todos = todos;
 	}
 
 	public Long getId() {
@@ -90,12 +100,20 @@ public class User implements Serializable {
 		this.role = role;
 	}
 
+	public List<Todo> getTodos() {
+		return todos;
+	}
+
+	public void setTodos(List<Todo> todos) {
+		this.todos = todos;
+	}
+
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", enabled=" + enabled
-				+ ", role=" + role + "]";
+				+ ", role=" + role + ", todos=" + todos + "]";
 	}
-	
+
 }
 
 
