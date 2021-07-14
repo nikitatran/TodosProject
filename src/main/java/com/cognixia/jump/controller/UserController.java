@@ -29,17 +29,12 @@ public class UserController {
 	@Autowired
 	UserRepository repo;
 	@GetMapping("/user")
-	public ResponseEntity<?> getAllUsers(@PathVariable User user) {
+	public ResponseEntity<?> getAllUsers() {
 		
-		User getAll = (User) repo.findAll();
+		List<User> list = repo.findAll();
 		
-		if(getAll == null) {
-			return ResponseEntity.status(500)
-								 .body(getAll);
-		}
-		
-		return ResponseEntity.status(201)
-							 .body(getAll);
+		return ResponseEntity.status(200)
+							 .body(list);
 	}
 	
 	@PostMapping("/user")
