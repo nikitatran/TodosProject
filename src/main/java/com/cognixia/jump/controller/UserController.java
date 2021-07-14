@@ -31,15 +31,10 @@ public class UserController {
 	@GetMapping("/user")
 	public ResponseEntity<?> getAllUsers(@PathVariable User user) {
 		
-		User getAll = (User) repo.findAll();
-		
-		if(getAll == null) {
-			return ResponseEntity.status(500)
-								 .body(getAll);
-		}
+		List<User> listOfUsers = repo.findAll();
 		
 		return ResponseEntity.status(201)
-							 .body(getAll);
+							 .body(listOfUsers);
 	}
 	
 	@PostMapping("/user")
