@@ -1,6 +1,7 @@
 package com.cognixia.jump.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -46,18 +47,18 @@ public class TodoController {
 	}
 	
 	@GetMapping("/user/{userId}/todo")
-	public ResponseEntity<?> getUserTodoById(@PathVariable long userId, @RequestParam int todoId) throws ResourceNotFoundException{
+	public ResponseEntity<?> getUserTodoById(@PathVariable long userId, @RequestParam int id) throws ResourceNotFoundException{
 		if(!userRepo.existsById(userId)) {
 			throw new ResourceNotFoundException("User with user id " + userId + " not found.");
 		}
 		
 		List<Todo> todolist = userRepo.findById(userId).get().getTodos();
 		
-		if(todolist.isEmpty() || todoId > todolist.size() || todoId < 0) {
-			throw new ResourceNotFoundException("Todo with id " + todoId + " not found.");
+		if(todolist.isEmpty() || id > todolist.size() || id <= 0) {
+			throw new ResourceNotFoundException("Todo with id " + id + " not found.");
 		}
 
-		return ResponseEntity.status(200).body(todolist.get(todoId));
+		return ResponseEntity.status(200).body(todolist.get(id-1));
 	}
 	
 	@PostMapping("/user/{userId}/todo")
@@ -72,20 +73,23 @@ public class TodoController {
 		return ResponseEntity.status(200).body(newTodo);
 	}
 	
+	//TODO
 	@DeleteMapping("/user/{userId}/todo")
-	public ResponseEntity<?> deleteUserTodoById(@PathVariable long userId, @RequestParam int todoId) throws ResourceNotFoundException{
-		Todo deleted = (Todo) getUserTodoById(userId, todoId).getBody();
-		todosRepo.deleteById(deleted.getId());
+	public ResponseEntity<?> deleteUserTodoById(@PathVariable long userId, @RequestParam int id) throws ResourceNotFoundException{
+		Todo deleted = (Todo) getUserTodoById(userId, id).getBody();
+		todosRepo.deleteTodo(deleted.getId());
 
 		return ResponseEntity.status(200).body(deleted);
+		
 	}
 	
 	@PutMapping("/user/{userId}/todo")
 	public ResponseEntity<?> updateUserTodoById(@PathVariable long userId, @Valid @RequestBody Todo todo) throws ResourceNotFoundException{
 		Todo updated = (Todo) getUserTodoById(userId, todo.getId()).getBody();
-		todosRepo.save(updated);
+		todo.setUser(updated.getUser());
+		todosRepo.save(todo);
 		
-		return ResponseEntity.status(200).body(updated);
+		return ResponseEntity.status(200).body(todo);
 	}
 	
 	
