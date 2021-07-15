@@ -31,6 +31,9 @@ public class UserController {
 	@Autowired
 	UserRepository repo;
 	@GetMapping("/user")
+	@ApiOperation( value = "Find User by id",
+	   notes = "Provide an id to look up a user in the database",
+	   response = User.class)
 	public ResponseEntity<?> getAllUsers() {
 		List<User> list = repo.findAll();
 		
@@ -39,6 +42,9 @@ public class UserController {
 	}
 	
 	@PostMapping("/user")
+	@ApiOperation( value = "Add User",
+	   notes = "Add new user with id to database",
+	   response = User.class)
 	public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
 		
 		// regardless of the initial id, won't override something that already exists
@@ -52,6 +58,9 @@ public class UserController {
 	}
 	
 	@PutMapping("/user")
+	@ApiOperation( value = "Update User",
+	   notes = "Update user (if exists) in the database",
+	   response = User.class)
 	public ResponseEntity<User> updateUser(@Valid @RequestBody User user) {
 		
 		Optional<User> found =  repo.findById(user.getId());
@@ -70,6 +79,9 @@ public class UserController {
 	}
 	
 	@GetMapping("/user/{id}")
+	@ApiOperation( value = "Get User by id",
+	   notes = "Search for user (if exists) in the database",
+	   response = User.class)
 	public ResponseEntity<?> getUserById(@PathVariable Long id) throws ResourceNotFoundException {
 		if(!repo.existsById(id)) {
 			throw new ResourceNotFoundException("User with id " +id + " not found");
@@ -81,21 +93,25 @@ public class UserController {
 
 	}
 
-	@PatchMapping("/user/{id}")
-	public ResponseEntity<User> updateUserName(@PathVariable Long id) {
-		Optional<User> user = repo.findById(id);
-		
-		if(user.isPresent()) {
-			return ResponseEntity.status(200)
-								 .body(user.get());
-		}
-		else {
-			return ResponseEntity.status(400)
-								 .body(new User() );
-		}
-	}
+	// FIXME: not implemented yet
+//	@PatchMapping("/user/{id}")
+//	public ResponseEntity<User> updateUserName(@PathVariable Long id) {
+//		Optional<User> user = repo.findById(id);
+//		
+//		if(user.isPresent()) {
+//			return ResponseEntity.status(200)
+//								 .body(user.get());
+//		}
+//		else {
+//			return ResponseEntity.status(400)
+//								 .body(new User() );
+//		}
+//	}
 	
 	@DeleteMapping("/user/{id}")
+	@ApiOperation( value = "Delete User by id",
+	   notes = "Delete user (if exists) in the database",
+	   response = User.class)
 	public ResponseEntity<User> deleteUser(@PathVariable Long id) throws ResourceNotFoundException {
 		
 		Optional<User> user = repo.findById(id);
