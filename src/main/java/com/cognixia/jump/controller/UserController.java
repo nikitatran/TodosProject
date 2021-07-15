@@ -22,6 +22,8 @@ import com.cognixia.jump.exception.ResourceNotFoundException;
 import com.cognixia.jump.model.User;
 import com.cognixia.jump.repository.UserRepository;
 
+import io.swagger.annotations.ApiOperation;
+
 @RequestMapping("/api")
 @RestController
 public class UserController {
