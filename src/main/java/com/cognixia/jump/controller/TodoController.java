@@ -37,6 +37,7 @@ public class TodoController {
 	@Autowired
 	UserController userController;
 	
+	//works
 	@GetMapping("/user/{userId}/todolist")
 	public ResponseEntity<?> getUserTodolist(@PathVariable long userId) throws ResourceNotFoundException{
 		if(!userRepo.existsById(userId)) {
@@ -46,6 +47,7 @@ public class TodoController {
 		return ResponseEntity.status(200).body(todolist);
 	}
 	
+	//works
 	@GetMapping("/user/{userId}/todo")
 	public ResponseEntity<?> getUserTodoById(@PathVariable long userId, @RequestParam int id) throws ResourceNotFoundException{
 		if(!userRepo.existsById(userId)) {
@@ -54,13 +56,18 @@ public class TodoController {
 		
 		List<Todo> todolist = userRepo.findById(userId).get().getTodos();
 		
-		if(todolist.isEmpty() || id > todolist.size() || id <= 0) {
-			throw new ResourceNotFoundException("Todo with id " + id + " not found.");
+		//iterate through list until id match is found
+		
+		for(Todo t: todolist) {
+			if(t.getId() == id) {
+				return ResponseEntity.status(200).body(t);
+			}
 		}
-
-		return ResponseEntity.status(200).body(todolist.get(id-1));
+		// if id match wasn't found, throw exception
+		throw new ResourceNotFoundException("Todo with id " + id + " not found.");
 	}
 	
+	//works
 	@PostMapping("/user/{userId}/todo")
 	public ResponseEntity<?> addTodo(@PathVariable long userId, @Valid @RequestBody Todo todo) throws ResourceNotFoundException{
 		todo.setId(-1);
@@ -73,7 +80,7 @@ public class TodoController {
 		return ResponseEntity.status(200).body(newTodo);
 	}
 	
-	//TODO
+	//works
 	@DeleteMapping("/user/{userId}/todo")
 	public ResponseEntity<?> deleteUserTodoById(@PathVariable long userId, @RequestParam int id) throws ResourceNotFoundException{
 		Todo deleted = (Todo) getUserTodoById(userId, id).getBody();
@@ -83,6 +90,7 @@ public class TodoController {
 		
 	}
 	
+	//works
 	@PutMapping("/user/{userId}/todo")
 	public ResponseEntity<?> updateUserTodoById(@PathVariable long userId, @Valid @RequestBody Todo todo) throws ResourceNotFoundException{
 		Todo updated = (Todo) getUserTodoById(userId, todo.getId()).getBody();
