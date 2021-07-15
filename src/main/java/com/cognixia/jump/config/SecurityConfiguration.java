@@ -37,9 +37,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.authorizeRequests()
 //		.antMatchers("/api/user").hasRole("USER")
 //		.antMatchers("/api/useraccess").hasAnyRole("USER")
-//		.antMatchers("/api/all").permitAll()
 //		.antMatchers(HttpMethod.GET, "/api/todo").hasRole("USER")
-		.antMatchers("/**").hasRole("USER")
+		.antMatchers("/api/**").hasRole("USER")
 		.and().httpBasic();
 	
 	}
