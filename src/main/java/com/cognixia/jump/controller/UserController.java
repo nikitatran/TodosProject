@@ -50,17 +50,20 @@ public class UserController {
 	}
 	
 	@PutMapping("/user")
-	public @ResponseBody String updateUser(@RequestBody User user) {
+	public ResponseEntity<User> updateUser(@Valid @RequestBody User user) {
 		
 		Optional<User> found =  repo.findById(user.getId());
 
 		if( found.isPresent() ) {
 			User updated = repo.save(user);
 			
-			return "Saved: " + updated;
+			return ResponseEntity.status(200)
+								 .body(updated);
 		}
 		else {
-			return "Could not update user, id = " + user.getId() + " does not exists";
+
+			return ResponseEntity.status(400)
+								 .body(new User());
 		}
 	}
 	
@@ -76,7 +79,7 @@ public class UserController {
 
 	}
 
-	@PatchMapping("/user/patch")
+	@PatchMapping("/user/{id}")
 	public ResponseEntity<User> updateUserName(@PathVariable Long id) {
 		Optional<User> user = repo.findById(id);
 		
