@@ -23,6 +23,8 @@ import com.cognixia.jump.model.User;
 import com.cognixia.jump.repository.TodosRepository;
 import com.cognixia.jump.repository.UserRepository;
 
+import io.swagger.annotations.ApiOperation;
+
 
 @RequestMapping("/api")
 @RestController
@@ -39,6 +41,9 @@ public class TodoController {
 	
 	//works
 	@GetMapping("/user/{userId}/todolist")
+	@ApiOperation( value = "Get User Todo list",
+	   notes = "Show user todo list (if exists)",
+	   response = Todo.class)
 	public ResponseEntity<?> getUserTodolist(@PathVariable long userId) throws ResourceNotFoundException{
 		if(!userRepo.existsById(userId)) {
 			throw new ResourceNotFoundException("User with user id " + userId + " not found.");
@@ -49,6 +54,9 @@ public class TodoController {
 	
 	//works
 	@GetMapping("/user/{userId}/todo")
+	@ApiOperation( value = "Get User Todo list by id",
+	   notes = "Show user todo list (if exists) selected by id",
+	   response = Todo.class)
 	public ResponseEntity<?> getUserTodoById(@PathVariable long userId, @RequestParam int id) throws ResourceNotFoundException{
 		if(!userRepo.existsById(userId)) {
 			throw new ResourceNotFoundException("User with user id " + userId + " not found.");
@@ -69,6 +77,9 @@ public class TodoController {
 	
 	//works
 	@PostMapping("/user/{userId}/todo")
+	@ApiOperation( value = "Add User Todo list",
+	   notes = "Add user todo list",
+	   response = Todo.class)
 	public ResponseEntity<?> addTodo(@PathVariable long userId, @Valid @RequestBody Todo todo) throws ResourceNotFoundException{
 		todo.setId(-1);
 		User user = (User) userController.getUserById(userId).getBody();
@@ -82,6 +93,9 @@ public class TodoController {
 	
 	//works
 	@DeleteMapping("/user/{userId}/todo")
+	@ApiOperation( value = "Delete User Todo list by id",
+	   notes = "Delete user todo list by id (if exists)",
+	   response = Todo.class)
 	public ResponseEntity<?> deleteUserTodoById(@PathVariable long userId, @RequestParam int id) throws ResourceNotFoundException{
 		Todo deleted = (Todo) getUserTodoById(userId, id).getBody();
 		todosRepo.deleteTodo(deleted.getId());
@@ -92,6 +106,9 @@ public class TodoController {
 	
 	//works
 	@PutMapping("/user/{userId}/todo")
+	@ApiOperation( value = "Update User Todo list by id",
+	   notes = "Update user todo list by id (if exists)",
+	   response = Todo.class)
 	public ResponseEntity<?> updateUserTodoById(@PathVariable long userId, @Valid @RequestBody Todo todo) throws ResourceNotFoundException{
 		Todo updated = (Todo) getUserTodoById(userId, todo.getId()).getBody();
 		todo.setUser(updated.getUser());
