@@ -15,7 +15,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /*
- * On Browser, go to URL: http://localhost:8080/swagger-ur.html 
+ * On Browser, go to URL: http://localhost:8080/swagger-ui.html 
  *
  * On Postman, do a get request to: http://localhost:8080/v2/api-docs
  * 
