@@ -94,7 +94,7 @@ public class UserController {
 	}
 	
 	@DeleteMapping("/user/{id}")
-	public ResponseEntity<User> deleteUser(@PathVariable Long id) {
+	public ResponseEntity<User> deleteUser(@PathVariable Long id) throws ResourceNotFoundException {
 		
 		Optional<User> user = repo.findById(id);
 		
@@ -104,8 +104,7 @@ public class UserController {
 								 .body(user.get());
 		}
 		else {
-			return ResponseEntity.status(400)
-								 .body(new User() );
+			throw new ResourceNotFoundException("User with id " +id + " not found");
 		}
 	}
 	
